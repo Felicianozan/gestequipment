@@ -1,0 +1,48 @@
+{% extends "equipments/base.html" %}
+
+{% block content %}
+<h2>Chatbot</h2>
+<div id="chat-container">
+    <!-- Le chat s'affichera ici -->
+</div>
+
+<input type="text" id="user-input" placeholder="Posez votre question" />
+<button onclick="sendMessage()">Envoyer</button>
+
+<script>
+    const socket = new WebSocket("ws://" + window.location.host + "/ws/chat/");
+
+    socket.onopen = function(e) {
+        console.log("Connexion WebSocket établie");
+    };
+
+    socket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        const message = data['message'];
+
+        const chatContainer = document.getElementById('chat-container');
+        const messageElement = document.createElement('div');
+        messageElement.classList.add('message');
+        messageElement.classList.add('bot-message');
+        messageElement.innerText = message;
+        chatContainer.appendChild(messageElement);
+    };
+
+    function sendMessage() {
+        const userInput = document.getElementById('user-input').value;
+        if (userInput) {
+            const chatContainer = document.getElementById('chat-container');
+            
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message');
+            messageElement.classList.add('user-message');
+            messageElement.innerText = userInput;
+            chatContainer.appendChild(messageElement);
+
+            socket.send(JSON.stringify({ 'message': userInput }));
+
+            document.getElementById('user-input').value = '';
+        }
+    }
+</script>
+{% endblock %}

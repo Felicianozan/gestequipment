@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Dashboard Technicien - Gest Equipment</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <style>
+        body {
+            background: url('{% static "equipments/ima.jpg" %}') no-repeat center center/cover;
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+        }
+        .navbar {
+            background: rgba(0,0,0,0.85);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 0.5rem 1rem;
+        }
+        .welcome-box {
+            background: rgba(0,0,0,0.7);
+            max-width: 800px;
+            margin: 60px auto;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+        .welcome-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .btn-dashboard {
+            width: 100%;
+            max-width: 320px;
+            margin: 10px auto;
+            font-weight: 600;
+            font-size: 1.1rem;
+            padding: 12px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            justify-content: center;
+            color: white;
+            text-decoration: none;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            transition: background-color 0.3s ease;
+        }
+        .btn-equipements { background-color: #3498db; }
+        .btn-equipements:hover { background-color: #217dbb; }
+        .btn-maintenances { background-color: #27ae60; }
+        .btn-maintenances:hover { background-color: #1f8447; }
+        .btn-incidents { background-color: #f1c40f; color: #222; }
+        .btn-incidents:hover { background-color: #c9a809; }
+        .btn-logout { background-color: #e74c3c; }
+        .btn-logout:hover { background-color: #bb3a2a; }
+        .info-text {
+            margin-bottom: 30px;
+            font-size: 1.15rem;
+        }
+        @media (min-width: 576px) {
+            .btn-container {
+                display: flex;
+                justify-content: center;
+                gap: 30px;
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="{% static 'equipments/equip.png' %}" alt="Logo" width="70" />
+                <span class="ms-2" style="font-weight:700; font-size:1.4rem; color:#ecf0f1;">GEST EQUIPMENT</span>
+            </a>
+
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'notifications_list' %}">
+                    <i class="fas fa-bell nav-icon"></i> Notifications 
+                    <span class="badge bg-danger notification-badge">{{ notifications_non_lues }}</span>
+                </a>
+            </li>
+        </div>
+    </nav>
+
+    <main class="welcome-box">
+        <h1 class="welcome-title">Bienvenue, {{ request.user.username }} !</h1>
+        <p class="info-text">
+            Vous êtes connecté en tant que technicien.<br />
+            Nom complet : {{ request.user.technicien.nom }} {{ request.user.technicien.prénom }}<br />
+           
+        </p>
+
+        <div class="btn-container">
+            <a href="{% url 'tableau_de_bord' %}" class="btn-dashboard btn-equipements">
+                <i class="fas fa-cogs"></i> Tableau de bord des équipements
+            </a>
+            <a href="{% url 'maintenance_list' %}" class="btn-dashboard btn-maintenances">
+                <i class="fas fa-tools"></i> Liste des maintenances
+            </a>
+            <a href="{% url 'liste_incidents' %}" class="btn-dashboard btn-incidents">
+                <i class="fas fa-exclamation-triangle"></i> Liste des incidents
+            </a>
+            <a href="" class="btn-dashboard btn-logout">
+                <i class="fas fa-sign-out-alt"></i> Déconnexion
+            </a>
+            
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,28 @@
+{% extends "equipments/base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-4">{% if object %}Modifier{% else %}Créer{% endif %} une Maintenance</h2>
+
+    <!-- Formulaire de création ou modification de maintenance -->
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Champ du formulaire -->
+        <div class="form-group">
+            {{ form.as_p }}
+        </div>
+        
+        <!-- Bouton d'enregistrement -->
+        <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Enregistrer
+        </button>
+
+        <!-- Lien d'annulation -->
+        <a href="{% url 'maintenance_list' %}" class="btn btn-secondary">
+            <i class="fas fa-times"></i> Annuler
+        </a>
+    </form>
+
+</div>
+{% endblock %}

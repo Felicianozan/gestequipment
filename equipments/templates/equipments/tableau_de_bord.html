@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord - Equipements</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --warning: #f39c12;
+            --light: #f8f9fa;
+            --dark: #2c3e50;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            padding: 0 20px 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: none;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 20px rgba(0,0,0,0.12);
+        }
+        
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: var(--secondary);
+        }
+        
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: var(--primary);
+            font-size: 1.4rem;
+            display: flex;
+            align-items: center;
+        }
+        
+        .card h2 i {
+            margin-right: 10px;
+            width: 35px;
+            height: 35px;
+            background: var(--secondary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        
+        .stat-card h2 i {
+            background: var(--secondary);
+        }
+        
+        .status-card h2 i {
+            background: var(--success);
+        }
+        
+        .recent-card h2 i {
+            background: var(--warning);
+        }
+        
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--secondary);
+            margin: 10px 0;
+            text-align: center;
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-label {
+            text-align: center;
+            font-size: 1.1rem;
+            color: #666;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .chart-container {
+            height: 250px;
+            position: relative;
+            margin-top: 15px;
+        }
+        
+        .equipment-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .equipment-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        
+        .equipment-item:last-child {
+            border-bottom: none;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+        
+        .status-fonctionnel { background: var(--success); }
+        .status-panne { background: var(--accent); }
+        .status-maintenance { background: var(--warning); }
+        
+        .equipment-name {
+            font-weight: 600;
+            flex-grow: 1;
+        }
+        
+        .equipment-status {
+            font-weight: 500;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+        }
+        
+        .status-fonctionnel-text { 
+            background: rgba(39, 174, 96, 0.15);
+            color: var(--success);
+        }
+        
+        .status-panne-text { 
+            background: rgba(231, 76, 60, 0.15);
+            color: var(--accent);
+        }
+        
+        .status-maintenance-text { 
+            background: rgba(243, 156, 18, 0.15);
+            color: var(--warning);
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .dashboard {
+                grid-template-columns: 1fr;
+                padding: 0 15px 30px;
+            }
+            
+            .card {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-chart-line"></i> TABLEAU DE BORD DES EQUIPEMENTS</h1>
+    
+    </div>
+
+    <div class="dashboard">
+        <!-- Carte : Statistiques globales -->
+        <div class="card stat-card">
+            <h2><i class="fas fa-chart-bar"></i> Statistiques globales</h2>
+            <div class="stat-number">{{ total_equipements }}</div>
+            <p class="stat-label">Equipements enregistrés</p>
+        </div>
+
+        <!-- Carte : Répartition par statut -->
+        <div class="card status-card">
+            <h2><i class="fas fa-chart-pie"></i> Etat des équipements</h2>
+            <div class="chart-container">
+                <canvas id="statutChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Carte : Derniers ajouts -->
+        <div class="card recent-card">
+            <h2><i class="fas fa-history"></i> Derniers équipements ajoutés</h2>
+            <ul class="equipment-list">
+                {% for equipement in derniers_equipements %}
+                <li class="equipment-item">
+                    <div class="status-indicator status-{{ equipement.etat }}"></div>
+                    <div class="equipment-name">{{ equipement.nom }}</div>
+                    <div class="equipment-status status-{{ equipement.etat }}-text">
+                        {{ equipement.get_etat_display }}
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Configuration du graphique circulaire
+        document.addEventListener('DOMContentLoaded', function() {
+            const ctx = document.getElementById('statutChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: {{ etat_labels|safe }},
+                    datasets: [{
+                        data: {{ etat_data|safe }},
+                        backgroundColor: [
+                            '#2ecc71', // Fonctionnel
+                            '#f1c40f', // Panne
+                            '#e74c3c'  // Maintenance 
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: {
+                                    size: 13,
+                                    family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+                                }
+                            }
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(44, 62, 80, 0.9)',
+                            titleFont: {
+                                family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+                            },
+                            bodyFont: {
+                                family: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif"
+                            },
+                            padding: 10,
+                            cornerRadius: 6,
+                            displayColors: false,
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.parsed || 0;
+                                    return `${label}: ${value} équipements`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '60%',
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

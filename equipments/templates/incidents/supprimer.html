@@ -1,0 +1,22 @@
+{% extends 'equipments/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Supprimer l'Incident</h2>
+
+    <!-- Message de confirmation de suppression -->
+    <p>Voulez-vous vraiment supprimer cet incident ?</p>
+
+    <!-- Formulaire de suppression -->
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+    </form>
+
+    <!-- Lien pour annuler la suppression -->
+    <a href="{% url 'liste_incidents' %}" class="btn btn-secondary mt-3">
+        <i class="fas fa-times"></i> Annuler
+    </a>
+</div>
+
+{% endblock %}

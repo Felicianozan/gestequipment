@@ -1,0 +1,20 @@
+{% extends "equipments/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Mes Notifications</h2>
+    
+    {% if notifications %}
+        <ul class="list-group">
+            {% for notification in notifications %}
+                <li class="list-group-item {% if not notification.lu %}list-group-item-warning{% endif %}">
+                    <strong>{{ notification.type_notification }}</strong>: {{ notification.message }}
+                    <small class="text-muted">{{ notification.date_envoi|date:"d M Y H:i" }}</small>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucune notification pour le moment.</p>
+    {% endif %}
+</div>
+{% endblock %}

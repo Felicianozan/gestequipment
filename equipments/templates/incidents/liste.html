@@ -1,0 +1,89 @@
+{% extends 'equipments/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="mb-3">Liste des Incidents</h2>
+
+    <a href="{% url 'ajouter_incident' %}" class="btn btn-success mb-3">
+        <i class="fas fa-plus"></i> Ajouter un incident
+    </a>
+
+    <table class="table table-striped table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>ID</th>
+                <th>Equipement</th>
+                <th>Description</th>
+                <th>Date</th>
+                <th>Etat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for incident in incidents %}
+            <tr>
+                <td>{{ incident.id }}</td>
+                <td>{{ incident.équipement.nom }}</td>
+                <td>{{ incident.description }}</td>
+                <td>{{ incident.date_signalement|date:"d/m/Y H:i" }}</td>
+                <td>
+                    <span class="badge {% if incident.état_incident == 'Résolu' %} bg-success {% else %} bg-warning {% endif %}">
+                        {{ incident.état_incident }}
+                    </span>
+                </td>
+                <td>
+                    <a href="{% url 'modifier_incident' incident.id %}" class="btn btn-sm btn-warning">
+                        <i class="fas fa-edit"></i> 
+                    </a>
+                    <a href="{% url 'supprimer_incident' incident.id %}" class="btn btn-sm btn-danger">
+                        <i class="fas fa-trash"></i> 
+                    </a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="6" class="text-center">Aucun incident enregistré.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+            <button id="downloadPdf1" class="btn btn-primary mb-4">
+                <i class="fas fa-file-pdf"></i> Télécharger le tableau
+            </button>
+</div>
+
+<script>
+    document.getElementById('downloadPdf1').addEventListener('click', function () {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFontSize(18);
+        doc.text("Liste des incidents ", 14, 15);
+
+        // Récupération des données du tableau
+        const table = document.querySelector("table");
+        const headers = [...table.querySelectorAll("thead th")].map(th => th.innerText);
+        const rows = [...table.querySelectorAll("tbody tr")].map(tr => {
+            return [...tr.querySelectorAll("td")].map(td => td.innerText);
+        });
+
+        // Générer le tableau avec autoTable
+        doc.autoTable({
+            head: [headers],
+            body: rows,
+            startY: 25,
+            styles: { fontSize: 10, cellPadding: 2 },
+            theme: "grid"
+        });
+
+        // Forcer le téléchargement du fichier PDF
+        doc.save("panne.pdf");
+    });
+</script>
+
+
+
+
+
+
+{% endblock %}

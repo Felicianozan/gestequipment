@@ -1,0 +1,23 @@
+{% extends 'equipments/base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Ajouter un Incident</h2>
+
+    <!-- Formulaire d'ajout ou modification d'incident -->
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            {{ form.as_p }}
+        </div>
+        
+        <button type="submit" class="btn btn-primary">Enregistrer</button>
+    </form>
+
+    <!-- Lien de retour -->
+    <a href="{% url 'liste_incidents' %}" class="btn btn-secondary mt-3">
+        <i class="fas fa-arrow-left"></i> Retour
+    </a>
+</div>
+
+{% endblock %}

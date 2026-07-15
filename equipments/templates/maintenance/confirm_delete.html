@@ -1,0 +1,26 @@
+{% extends "equipments/base.html" %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Confirmer la suppression</h2>
+    
+    <!-- Message de confirmation de suppression -->
+    <p>Voulez-vous vraiment supprimer cette maintenance ?</p>
+    
+    <!-- Formulaire de confirmation de suppression -->
+    <form method="post">
+        {% csrf_token %}
+        
+        <!-- Bouton de confirmation de suppression -->
+        <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash-alt"></i> Oui, supprimer
+        </button>
+
+        <!-- Lien pour annuler la suppression -->
+        <a href="{% url 'maintenance_list' %}" class="btn btn-secondary mt-3">
+            <i class="fas fa-times"></i> Annuler
+        </a>
+    </form>
+</div>
+
+{% endblock %}

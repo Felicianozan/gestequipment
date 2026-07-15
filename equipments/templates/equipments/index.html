@@ -1,0 +1,351 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gest Equipment - Gestion d'équipements</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --success: #27ae60;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+        }
+        
+        body {
+            background: url('{% static "equipments/ima.jpg" %}') no-repeat center center/cover;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-image 1s ease-in-out;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+        }
+
+        .navbar {
+            background: rgba(0, 0, 0, 0.85);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 0.5rem 1rem;
+        }
+
+        .content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 50px 20px;
+        }
+
+        .footer {
+            background: rgba(0, 0, 0, 0.85);
+            color: white;
+            text-align: center;
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+        
+        .nav-icon {
+            width: 24px;
+            text-align: center;
+            margin-right: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .nav-link {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 1rem !important;
+            border-radius: 6px;
+            margin: 0 4px;
+            transition: all 0.3s ease;
+            color: #ecf0f1 !important;
+            font-weight: 500;
+        }
+        
+        .nav-link:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .nav-link:hover .nav-icon {
+            transform: scale(1.1);
+        }
+        
+        .login-btn {
+            background: var(--secondary);
+            border-radius: 30px;
+            padding: 8px 20px !important;
+            font-weight: 600;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .login-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-text {
+            color: white;
+            font-weight: 700;
+            font-size: 1.4rem;
+            margin-left: 12px;
+        }
+        
+        .welcome-box {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 40px;
+            border-radius: 15px;
+            max-width: 800px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            animation: fadeIn 1s ease-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .welcome-title {
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            background: linear-gradient(to right, #3498db, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .welcome-text {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            margin-bottom: 30px;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+            text-align: left;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+        
+        .feature-title {
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--dark);
+        }
+        
+        .feature-text {
+            color: #555;
+            line-height: 1.6;
+        }
+        
+        .highlight {
+            color: var(--secondary);
+            font-weight: 700;
+        }
+        
+        .notification-badge {
+            margin-left: 8px;
+            font-size: 0.8rem;
+            vertical-align: middle;
+        }
+        
+        @media (max-width: 992px) {
+            .navbar-nav {
+                padding-top: 15px;
+            }
+            
+            .nav-link {
+                margin: 4px 0;
+            }
+            
+            .welcome-title {
+                font-size: 2.2rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .welcome-title {
+                font-size: 1.8rem;
+            }
+            
+            .welcome-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <div class="logo-container">
+                <img src="{% static 'equipments/equip.png' %}" alt="GestEquipmentLogo" width="70">
+                <span class="logo-text">GEST EQUIPMENT</span>
+            </div>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="">
+                            <i class="fas fa-home nav-icon"></i> Accueil
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="equipements">
+                            <i class="fas fa-cogs nav-icon"></i> Equipements
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="tableau_de_bord">
+                            <i class="fas fa-chart-line nav-icon"></i> Tableau de bord
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="incidents">
+                            <i class="fas fa-exclamation-triangle nav-icon"></i> Incidents
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'maintenance_list' %}">
+                            <i class="fas fa-tools nav-icon"></i> Maintenances
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="notifications">
+                            <i class="fas fa-bell nav-icon"></i> Notifications 
+                            <span class="badge bg-danger notification-badge">{{ notifications_non_lues }}</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link login-btn" href="{% url 'connexion' %}">
+                            <i class="fas fa-sign-in-alt nav-icon"></i> Se connecter
+                        </a>
+                    </li> 
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="content">
+        <div class="welcome-box">
+            <h1 class="welcome-title">Bienvenue sur Gest Equipment</h1>
+            <p class="welcome-text">Votre solution tout-en-un pour la gestion des équipements, des incidents et des maintenances. 
+                Optimisez votre productivité grâce à notre plateforme intuitive et puissante.</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="feature-title">Gestion des équipements</h3>
+                    <p class="feature-text">Suivez tous vos équipements en temps réel avec un inventaire complet et des informations détaillées.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-exclamation-circle"></i>
+                    </div>
+                    <h3 class="feature-title">Suivi des incidents</h3>
+                    <p class="feature-text">Signalez et gérez efficacement tous les incidents avec notre système optimisé.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-tools"></i>
+                    </div>
+                    <h3 class="feature-title">Planification des maintenances</h3>
+                    <p class="feature-text">Planifiez et suivez vos interventions de maintenance préventive et corrective.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-pie"></i>
+                    </div>
+                    <h3 class="feature-title">Tableaux de bord</h3>
+                    <p class="feature-text">Analysez vos données grâce à des rapports personnalisés et des indicateurs clés.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <span>© 2025 Gest Equipment - Tous droits réservés </span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const images = [
+            "{% static 'equipments/ima.jpg' %}",
+            "{% static 'equipments/entre.jpg' %}",
+            "{% static 'equipments/board.jpg' %}",
+        ];
+        let index = 0;
+        
+        // Fonction pour changer l'image de fond
+        function changeBackground() {
+            index = (index + 1) % images.length;
+            document.body.style.backgroundImage = `url('${images[index]}')`;
+        }
+        
+        // Changer l'image toutes les 5 secondes
+        setInterval(changeBackground, 5000);
+        
+        // Animation des cartes au défilement
+        document.addEventListener('DOMContentLoaded', function() {
+            const featureCards = document.querySelectorAll('.feature-card');
+            
+            function animateCards() {
+                featureCards.forEach((card, index) => {
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, 200 * index);
+                });
+            }
+            
+            // Initialiser l'animation
+            setTimeout(animateCards, 500);
+        });
+    </script>
+</body>
+</html>
